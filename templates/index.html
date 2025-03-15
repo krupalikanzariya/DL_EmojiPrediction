@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+    <title>EmojifyText - Emojize Your Text</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="emoji-container"></div> <!-- Emoji border -->
+
+    <div class="emoji-border">
+        <div class="content">
+            <h1>🎉 EmojifyText</h1>
+            <h3>Emojize your text effortlessly! ✨</h3>
+            <input type="text" id="user_text" placeholder="Type something...">
+            <button onclick="sendData()">🔍 Predict</button>
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to dynamically generate floating emoji elements
+        function generateEmojis() {
+            const emojiList = ["😜", "📸", "😍", "😂", "😉", "🎄", "📷", "🔥", "😘", "❤", "😁", "🇺🇸", "☀", "✨", "💙", "💕", "😎", "😊", "💜", "💯"];
+            const container = document.querySelector(".emoji-container");
+
+            let rows = 6; 
+            let cols = 8; 
+            let emojiSize = 40; 
+            let padding = 20; 
+
+            let screenWidth = window.innerWidth;
+            let screenHeight = window.innerHeight;
+
+            let gridWidth = screenWidth / cols;
+            let gridHeight = screenHeight / rows;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (Math.random() > 0.4) { 
+                        let emoji = document.createElement("span");
+                        emoji.classList.add("emoji");
+                        emoji.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
+
+                        let randomX = col * gridWidth + Math.random() * (gridWidth - emojiSize) + padding;
+                        let randomY = row * gridHeight + Math.random() * (gridHeight - emojiSize) + padding;
+
+                        emoji.style.left = `${randomX}px`;
+                        emoji.style.top = `${randomY}px`;
+                        emoji.style.fontSize = `${Math.floor(Math.random() * (50 - 20) + 20)}px`; 
+
+                        container.appendChild(emoji);
+                    }
+                }
+            }
+        }
+
+        window.onload = generateEmojis;
+
+        function sendData() {
+            let text = document.getElementById("user_text").value;
+
+            fetch("/predict", {
+                method: "POST",
+                body: new URLSearchParams({ "text": text }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = `✨ Predicted Emoji: <strong>${data.prediction}</strong>`;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
