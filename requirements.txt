@@ -2,5 +2,4 @@ Flask==3.0.0
 tensorflow==2.16.1
 numpy==1.26.3
 pandas==2.2.0
-pickle5==0.0.11
 gunicorn==21.2.0
