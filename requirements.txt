@@ -3,3 +3,5 @@ tensorflow==2.18.0
 numpy==1.25.0
 pandas==2.0.3
 gunicorn==21.2.0
+setuptools>=68.0.0
+wheel
